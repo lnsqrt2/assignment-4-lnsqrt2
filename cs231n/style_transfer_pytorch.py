@@ -26,7 +26,11 @@ def content_loss(content_weight, content_current, content_original):
     """
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    loss = content_current - content_original
+    loss = (torch.pow(loss,2)).sum()
+    loss *= content_weight
+
+    return loss
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -45,8 +49,16 @@ def gram_matrix(features, normalize=True):
       (optionally normalized) Gram matrices for the N input images.
     """
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-    pass
+    N = features.shape[0]
+    C = features.shape[1]
+    H = features.shape[2]
+    W = features.shape[3]
+    feature1 = features.view(N, C, -1)
+    feature2 = feature1.transpose(1,2)
+    gram = torch.bmm(feature1,feature2)
+    if(normalize):
+      gram = gram / (H*W*C)
+    return gram
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -73,7 +85,7 @@ def style_loss(feats, style_layers, style_targets, style_weights):
     # not be very much code (~5 lines). You will need to use your gram_matrix function.
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    for i in range
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
