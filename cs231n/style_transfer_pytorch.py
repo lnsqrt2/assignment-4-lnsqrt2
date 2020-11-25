@@ -117,12 +117,15 @@ def tv_loss(img, tv_weight):
     # Your implementation should be vectorized and not require any loops!
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
+    H = img.shape[2]
+    W = img.shape[3]
+
     #height
-    loss1 = img[ : , : , :-1, : ] - img[ : , : , 1: , : ]
+    loss1 = img[ : , : , 1:H , : ] - img[ : , : , 0:H-1, : ]
     loss1 = (torch.pow(loss1,2)).sum()
 
     #weight
-    loss2 = img[ : , : , : , :-1] - img[ : , : , : , 1: ]
+    loss2 = img[ : , : , : , 1:W] - img[ : , : , : , 0:W-1]
     loss2 = (torch.pow(loss2,2)).sum()
 
     loss = (loss1+loss2) * tv_weight
