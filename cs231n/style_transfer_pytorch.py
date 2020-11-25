@@ -84,8 +84,18 @@ def style_loss(feats, style_layers, style_targets, style_weights):
     # Hint: you can do this with one for loop over the style layers, and should
     # not be very much code (~5 lines). You will need to use your gram_matrix function.
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+    style_loss = 0
+    num = len(style_layers)
+    
+    for i in range(0,num):
+      features = feats[style_layers[i]]
+      gram = gram_matrix(features)
+      loss = gram - style_targets[i]
+      loss = (torch.pow(loss,2)).sum()
+      loss *= style_weights[i]
+      style_loss += loss
 
-    for i in range
+    return style_loss
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
