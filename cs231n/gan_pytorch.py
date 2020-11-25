@@ -31,7 +31,16 @@ def sample_noise(batch_size, dim, seed=None):
         
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    #range(0,1)
+    noise = torch.rand(batch_size, dim)
+
+    #range(-0.5, 0.5)
+    noise = noise - 0.5
+
+    #range(-1,1)
+    noise = 2*noise
+
+    return noise
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     
@@ -39,20 +48,33 @@ def discriminator(seed=None):
     """
     Build and return a PyTorch model implementing the architecture above.
     """
-
+    
     if seed is not None:
         torch.manual_seed(seed)
 
     model = None
 
     ##############################################################################
-    # TODO: Implement architecture                                               #
+    # DONE: Implement architecture                                               #
     #                                                                            #
     # HINT: nn.Sequential might be helpful.                                      #
     ##############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    model = nn.Sequential(
+        #Flatten Layer
+        Flatten(),
+        #FC
+        nn.Linear(784, 256),
+        #LeakyRelu
+        nn.LeakyReLU(0.01),
+        #FC
+        nn.Linear(256, 256),
+        #LeakyRelu
+        nn.LeakyReLU(0.01),
+        #FC
+        nn.Linear(256, 1),
+    )
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     ##############################################################################
