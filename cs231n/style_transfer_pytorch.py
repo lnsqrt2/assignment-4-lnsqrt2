@@ -58,6 +58,8 @@ def gram_matrix(features, normalize=True):
     gram = torch.bmm(feature1,feature2)
     if(normalize):
       gram = gram / (H*W*C)
+    else:
+      pass
     return gram
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
@@ -88,6 +90,7 @@ def style_loss(feats, style_layers, style_targets, style_weights):
     num = len(style_layers)
     
     for i in range(0,num):
+      #style_layers is indices
       features = feats[style_layers[i]]
       gram = gram_matrix(features)
       loss = gram - style_targets[i]
@@ -114,9 +117,11 @@ def tv_loss(img, tv_weight):
     # Your implementation should be vectorized and not require any loops!
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
+    #height
     loss1 = img[ : , : , :-1, : ] - img[ : , : , 1: , : ]
     loss1 = (torch.pow(loss1,2)).sum()
 
+    #weight
     loss2 = img[ : , : , : , :-1] - img[ : , : , : , 1: ]
     loss2 = (torch.pow(loss2,2)).sum()
 

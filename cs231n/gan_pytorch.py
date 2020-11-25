@@ -266,13 +266,38 @@ def build_dc_classifier(batch_size):
     """
 
     ##############################################################################
-    # TODO: Implement architecture                                               #
+    # DONE: Implement architecture                                               #
     #                                                                            #
     # HINT: nn.Sequential might be helpful.                                      #
     ##############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    model = nn.Sequential(
+        #Unflatten Layer
+        Unflatten(batch_size, 1, 28, 28),
+        #Conv2D: 32 Filters, 5x5, Stride 1
+        nn.Conv2d(in_channels=1, out_channels=32,kernel_size=5),
+        #Leaky ReLU(alpha=0.01)
+        nn.LeakyReLU(0.01),
+        #Max Pool 2x2, Stride 2
+        nn.MaxPool2d(kernel_size = 2, stride = 2),
+        #Conv2D: 64 Filters, 5x5, Stride 1
+        nn.Conv2d(in_channels=32, out_channels=64,kernel_size=5),
+        #Leaky ReLU(alpha=0.01)
+        nn.LeakyReLU(0.01),
+        #Max Pool 2x2, Stride 2
+        nn.MaxPool2d(kernel_size = 2, stride = 2),
+        #Flatten
+        Flatten(),
+        #Fully Connected with output size 4 x 4 x 64
+        nn.Linear(in_features=4*4*64, out_features=4*4*64),
+        #Leaky ReLU(alpha=0.01)
+        nn.LeakyReLU(0.01),
+        #Fully Connected with output size 1
+        nn.Linear(in_features=4*4*64, out_features=1),
+    )
+
+    return model
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     ##############################################################################
@@ -287,13 +312,42 @@ def build_dc_generator(noise_dim=NOISE_DIM):
     """
 
     ##############################################################################
-    # TODO: Implement architecture                                               #
+    # DONE: Implement architecture                                               #
     #                                                                            #
     # HINT: nn.Sequential might be helpful.                                      #
     ##############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    model = nn.Sequential(
+        #Fully connected with output size 1024
+        nn.Linear(in_features=noise_dim,out_features=1024),
+        #ReLU
+        nn.ReLU(),
+        #BatchNorm
+        nn.BatchNorm1d(num_features=1024),
+        #Fully connected with output size 7 x 7 x 128
+        nn.Linear(in_features=1024,out_features=7*7*128),
+        #ReLU
+        nn.ReLU(),
+        #BatchNorm
+        nn.BatchNorm1d(num_features=7*7*128),
+        #Reshape into Image Tensor of shape 7, 7, 128
+        Unflatten(-1, 128, 7, 7),
+        #Conv2D^T (Transpose): 64 filters of 4x4, stride 2, 'same' padding (use padding=1)
+        nn.ConvTranspose2d(in_channels=128,out_channels=64,kernel_size=4,stride=2,padding=1),
+        #ReLU
+        nn.ReLU(),
+        #BatchNorm
+        nn.BatchNorm2d(num_features=64),
+        #Conv2D^T (Transpose): 1 filter of 4x4, stride 2, 'same' padding (use padding=1)
+        nn.ConvTranspose2d(in_channels=64,out_channels=1,kernel_size=4,stride=2,padding=1),
+        #TanH
+        nn.Tanh(),
+        #Flatten Layer
+        Flatten(),
+    )
+    
+    return model
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     ##############################################################################
