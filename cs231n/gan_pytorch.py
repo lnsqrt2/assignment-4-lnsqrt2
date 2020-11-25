@@ -93,13 +93,26 @@ def generator(noise_dim=NOISE_DIM, seed=None):
     model = None
 
     ##############################################################################
-    # TODO: Implement architecture                                               #
+    # DONE: Implement architecture                                               #
     #                                                                            #
     # HINT: nn.Sequential might be helpful.                                      #
     ##############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    model = nn.Sequential(
+        #FC
+        nn.Linear(noise_dim, 1024),
+        #Relu
+        nn.ReLU(),
+        #FC
+        nn.Linear(1024, 1024),
+        #Relu
+        nn.ReLU(),
+        #FC
+        nn.Linear(1024, 784),
+        #tanh
+        nn.Tanh(),
+    )
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     ##############################################################################
