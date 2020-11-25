@@ -114,7 +114,15 @@ def tv_loss(img, tv_weight):
     # Your implementation should be vectorized and not require any loops!
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    loss1 = img[ : , : , :-1, : ] - img[ : , : , 1: , : ]
+    loss1 = (torch.pow(loss1,2)).sum()
+
+    loss2 = img[ : , : , : , :-1] - img[ : , : , : , 1: ]
+    loss2 = (torch.pow(loss2,2)).sum()
+
+    loss = (loss1+loss2) * tv_weight
+
+    return loss
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 def preprocess(img, size=512):
