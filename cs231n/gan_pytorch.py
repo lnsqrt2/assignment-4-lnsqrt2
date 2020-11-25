@@ -153,15 +153,12 @@ def discriminator_loss(logits_real, logits_fake):
     loss = None
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    #batch data
-    N = logits_real.shape[0]
-
     #when label is 1
-    label1 = torch.ones((N,)).type(dtype)
+    label1 = torch.ones((logits_real.shape[0],)).type(dtype)
     loss1 = bce_loss(logits_real, label1)
 
     #when label is 0
-    label2 = torch.zeros((N,)).type(dtype)
+    label2 = torch.zeros((logits_real.shape[0],)).type(dtype)
     loss2 = bce_loss(logits_fake, label2)
 
     loss = loss1+loss2
@@ -181,7 +178,10 @@ def generator_loss(logits_fake):
     loss = None
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    #label is 1
+    label = torch.ones((logits_fake.shape[0],)).type(dtype)
+
+    loss = bce_loss(logits_fake,label)
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return loss
@@ -200,7 +200,14 @@ def get_optimizer(model):
     optimizer = None
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    optimizer = optim.Adam(
+        model.parameters(),
+        lr=1e-3, 
+        betas=(0.5, 0.999), 
+        eps=1e-8,
+        weight_decay=0,
+        amsgrad=False,
+    )
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return optimizer
@@ -219,8 +226,15 @@ def ls_discriminator_loss(scores_real, scores_fake):
     loss = None
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    #the real data loss
+    loss1 = scores_real - 1
+    loss1 = torch.pow(loss1,2) * 0.5
 
+    #the fake data loss
+    loss2 = scores_fake
+    loss2 = torch.pow(loss2,2) * 0.5
+
+    loss = torch.mean(loss1+loss2)
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return loss
 
@@ -237,7 +251,10 @@ def ls_generator_loss(scores_fake):
     loss = None
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    loss = scores_fake - 1
+    loss = torch.pow(loss,2) * 0.5
+
+    loss = torch.mean(loss)
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return loss
